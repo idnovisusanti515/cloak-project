@@ -15,9 +15,8 @@ export default async function handler(req, res) {
     ua.includes("meta-externalagent") ||
     ua.includes("curl");
 
-  const isFB =
-    referer.includes("facebook") ||
-    url.searchParams.get("fbclid");
+const isFB =
+  referer.includes("facebook");
 
   // ===== ROOT DOMAIN =====
   if (path === "/") {
