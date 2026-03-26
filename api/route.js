@@ -4,50 +4,48 @@ export default async function handler(req, res) {
   const referer = (req.headers["referer"] || "").toLowerCase();
   const url = new URL(req.url, `https://${req.headers.host}`);
 
+  const isBot =
+    ua.includes("bot") ||
+    ua.includes("crawl") ||
+    ua.includes("spider") ||
+    ua.includes("curl");
+
   const isFB =
     ua.includes("facebook") ||
-    ua.includes("meta") ||
     referer.includes("facebook") ||
     url.searchParams.has("fbclid");
 
   // ===== ROOT =====
   if (url.pathname === "/") {
 
-    if (isFB) {
-      return res.writeHead(302, {
-        Location: "/pusat4d-telah-melakukan-wd-1112"
+    // BOT → white page
+    if (isBot) {
+      return res.writeHead(301, {
+        Location: "https://www.google.com/"
       }).end();
     }
 
+    // FB → masuk slug
+    if (isFB) {
+      return res.writeHead(302, {
+        Location: "/dewi11-sudah-melakukan-wd-88775"
+      }).end();
+    }
+
+    // user biasa → white
     return res.writeHead(301, {
       Location: "https://www.google.com/"
     }).end();
   }
 
   // ===== SLUG =====
-  if (url.pathname === "/pusat4d-telah-melakukan-wd-1112") {
-
-    const slug = "pusat4d-telah-melakukan-wd-1112";
-    const domain = "ceritadariaku.com";
-
-    const id = Math.random().toString(36).substring(2, 10);
-
-    // 🔥 COOKIE MIRIP DUB
-    res.setHeader(
-      "Set-Cookie",
-      `dub_id_${domain}_${slug}=${id}; Path=/${slug}; Max-Age=3600`
-    );
-
-    // 🔥 HEADER MIRIP DUB
-    res.setHeader("X-Powered-By", "Dub - The Modern Link Attribution Platform");
-    res.setHeader("X-Robots-Tag", "googlebot: noindex");
-    res.setHeader("X-Dns-Prefetch-Control", "on");
-    res.setHeader("X-Frame-Options", "DENY");
+  if (url.pathname === "/dewi11-sudah-melakukan-wd-88775") {
 
     return res.writeHead(302, {
-      Location: "https://kocak12.pusat4daksi.org"
+      Location: "https://adsmenarik-dewi11.com/register"
     }).end();
   }
 
-  return res.writeHead(404).end();
+  // fallback
+  return res.writeHead(404).end("Not Found");
 }
