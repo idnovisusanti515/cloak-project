@@ -5,9 +5,12 @@ export default function handler(req, res) {
   const path = url.pathname;
   const query = url.search;
 
-  const isFB =
-    referer.includes("facebook") ||
-    url.searchParams.has("fbclid");
+const isFB =
+  referer.includes("facebook") ||
+  referer.includes("fb") ||
+  ua.includes("facebook") ||
+  ua.includes("meta") ||
+  url.searchParams.has("fbclid");
 
   const VALID_SLUG = "/pusat4d-telah-melakukan-wd-1112";
 
