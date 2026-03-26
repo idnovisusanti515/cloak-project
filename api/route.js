@@ -15,7 +15,7 @@ export default async function handler(req, res) {
 
     if (isFB) {
       return res.writeHead(302, {
-        Location: "https://ceritadariaku.com/pusat4d-telah-melakukan-wd-1112"
+        Location: "/pusat4d-telah-melakukan-wd-1112"
       }).end();
     }
 
@@ -24,14 +24,13 @@ export default async function handler(req, res) {
     }).end();
   }
 
-  // ===== SLUG → DUB =====
+  // ===== SLUG (HANDLER SENDIRI) =====
   if (url.pathname === "/pusat4d-telah-melakukan-wd-1112") {
     return res.writeHead(302, {
-      // GANTI ini dengan link Dub lo
-      Location: "https://ceritadariaku.com/pusat4d-telah-melakukan-wd-1112"
+      Location: "https://kocak12.pusat4daksi.org"
     }).end();
   }
 
-  // fallback
+  // ===== FALLBACK =====
   return res.writeHead(404).end();
 }
