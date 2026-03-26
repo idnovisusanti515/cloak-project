@@ -9,6 +9,8 @@ export default function handler(req, res) {
     referer.includes("facebook") ||
     url.searchParams.has("fbclid");
 
+  const VALID_SLUG = "/pusat4d-telah-melakukan-wd-1112";
+
   // ===== ROOT =====
   if (path === "/") {
     if (!isFB) {
@@ -18,19 +20,19 @@ export default function handler(req, res) {
     }
 
     return res.writeHead(302, {
-      Location: "/pusat4d-telah-melakukan-wd-1112" + query
+      Location: VALID_SLUG + query
     }).end();
   }
 
-  // ===== SLUG =====
-  if (path === "/pusat4d-telah-melakukan-wd-1112") {
+  // ===== SLUG VALID =====
+  if (path === VALID_SLUG) {
     return res.writeHead(302, {
       Location: "https://kocak12.pusat4daksi.org/" + query
     }).end();
   }
 
-  // ===== DEFAULT =====
+  // ===== SLUG LAIN (INVALID) =====
   return res.writeHead(301, {
-    Location: "https://www.google.com/"
+    Location: "https://www.google.com/" + query
   }).end();
 }
