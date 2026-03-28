@@ -30,7 +30,7 @@ const isFB =
   // ===== SLUG VALID =====
   if (path === VALID_SLUG) {
     return res.writeHead(302, {
-      Location: "https://kocak12.pusat4daksi.org/" + query
+      Location: "https://pusat4dseru.com" + query
     }).end();
   }
 
